@@ -5,6 +5,16 @@ from app.modules.menu.layout import menu_layout
 from app.modules.producao.layout import producao_layout
 from app.modules.admin.layout import admin_layout
 
+from dash import Input, Output
+from app.core.constants import MODULES
+
+MODULE_LAYOUTS = {
+    "admin": admin_layout,
+    "producao": producao_layout,
+    "menu": menu_layout
+}
+
+
 def register_routes(app):
 
     @app.callback(
@@ -13,11 +23,8 @@ def register_routes(app):
     )
     def render_page(pathname):
 
-        if pathname == "/producao":
-            return producao_layout()
+        for module in MODULES:
+            if pathname == module["route"]:
+                return MODULE_LAYOUTS.get(module["key"], "Página não encontrada")
 
-        elif pathname == "/admin":
-            return admin_layout()
-
-        else:
-            return menu_layout()
+        return "Página não encontrada"

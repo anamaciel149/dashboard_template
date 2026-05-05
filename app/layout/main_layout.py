@@ -1,23 +1,29 @@
 from dash import html, dcc
+from app.layout.sidebar import create_sidebar
+from app.layout.header import create_header
 
 def create_main_layout():
-    return html.Div([
-        dcc.Location(id="url"),
+    return html.Div(
+        className="flex bg-[#F1F5F9] min-h-screen font-sans antialiased", # Fonte suave e fundo clean
+        children=[
+            create_sidebar(),
 
-        # Navbar simples
-        html.Div([
-            html.H2("Sistema de Gestão", style={"margin": "10px"}),
-            html.Div([
-                html.A("Menu", href="/", style={"margin": "10px"}),
-                html.A("Produção", href="/producao", style={"margin": "10px"}),
-                html.A("Admin", href="/admin", style={"margin": "10px"}),
-            ])
-        ], style={
-            "backgroundColor": "#f5f5f5",
-            "padding": "10px",
-            "borderBottom": "1px solid #ddd"
-        }),
+            html.Div(
+                className="flex-1 p-12 overflow-y-auto",
+                children=[
+                    create_header("Performance Overview", "Data Intelligence Hub"),
 
-        # Conteúdo dinâmico
-        html.Div(id="page-content", style={"padding": "20px"})
-    ])
+                    html.Div(
+                        id='page-content',
+                        className="""
+                        w-full max-w-7xl mx-auto
+                        animate-in fade-in slide-in-from-bottom-4 duration-1000
+                        """
+                    ),
+
+                    dcc.Location(id='url'),
+                    dcc.Store(id='data-refresh-trigger')
+                ]
+            )
+        ]
+    )
